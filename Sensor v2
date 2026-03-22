@@ -1,0 +1,87 @@
+#include <WiFi.h>
+#include <WiFiClientSecure.h>
+#include <UniversalTelegramBot.h>
+#include <ArduinoJson.h>
+
+// Constantes
+// configurações do WIFI
+const char* ssid = " ";
+const char* password = " "; 
+
+// configurações do bot
+const char* botToken = " "; // token do bot
+const char* chatId = " "; // Id do chat com o usuário
+
+// definição dos pinos
+const int soil_pin = A0; // sensor
+const int led = 8; // led
+
+// valores de calibração
+const float umidademax = 1355.0;
+const float umidademin = 3090.0;
+
+WiFiClientSecure client; 
+UniversalTelegramBot bot(botToken, client); // ignora a validação do certificado ssl
+bool mensagemEnviada = false; // flag que evita o flood de mensagens 
+
+void setup() {
+    Serial.begin(9600);
+    pinMode(led, OUTPUT); 
+    conectarWiFi();
+}
+
+void loop() {
+    int valor = analogRead(soil_pin); // leitura do sensor
+    float pct = ((valor - umidademin) / (umidademax - umidademin)) * 100; // conversão para porcentagem
+
+    // mensagens do terminal
+    Serial.print("Valor do Sensor: ");
+    Serial.println(valor);
+    Serial.print("Umidade: ");
+    Serial.print(pct);
+    Serial.println("%");
+
+// bloco condicional
+    if (pct <= 35) {
+        digitalWrite(led, LOW); // ativa o led que representa a bomba d'água 
+        if (!mensagemEnviada){ // só executa se a flag for false
+            String mensagem = "🚨 Solo seco (" + String(pct, 1) + "%).\nRegando planta..."; // 
+            enviarTelegram(mensagem); // envia a mensagem
+            mensagemEnviada = true; // seta a flag para true, travando o envio de mensagens
+        }
+    } 
+    else {
+        digitalWrite(led, HIGH);
+        mensagemEnviada = false; // seta a flag para false, permitindo o envio da mensagem se a umidade ficar abaixo do valor definido
+    }
+
+    delay(2000); // delay de 2 segundos entra cada execução do loop
+}
+
+// função que conecta ao WIFI
+void conectarWiFi() {
+    client.setInsecure(); // ignora o certificado ssl
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+    
+    int tentativas = 0;
+    while (WiFi.status() != WL_CONNECTED && tentativas < 20) {
+        delay(1000);
+        Serial.print(".");
+        tentativas++;
+    }
+    
+    if (WiFi.status() != WL_CONNECTED) {
+        ESP.restart(); // reinicia o ESP caso a conexão não seja estabelecida
+    }
+    else {
+        Serial.println("\nConectado!");
+    }
+}
+
+// envia a mensagem para o telegram
+void enviarTelegram(String mensagem) {
+    if (WiFi.status() == WL_CONNECTED) {
+        bot.sendMessage(chatId, mensagem, "");
+    }
+}
