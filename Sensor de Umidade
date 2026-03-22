@@ -1,0 +1,38 @@
+
+// Sensor de umidade
+
+// constantes
+
+const int soil_pin = A0; // atribuindo o pino 0 para o signal do sensor
+const int led = 8; // atribuindo o pino 8 para o led
+const float umidademax = 1355.0; // define o valor de umidade máximo registrado pelo sensor
+const float umidademin = 3090.0; // define o valor de umidade mínimo registrado pelo sensor
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(led, OUTPUT); // define o led como saída
+}
+
+void loop() {
+  int valor = analogRead(soil_pin); // variável recebe a leitura do sensor
+  float pct = ((valor-umidademin) / (umidademax-umidademin))*100; // converte a leitura do sensor para porcentagem
+
+  // exibe o valor bruto no terminal
+  Serial.print("Valor do Sensor: ");
+  Serial.println(valor);
+  Serial.print("Umidade: ");
+
+  // exibe o valor convertido no terminal
+  Serial.print(pct);
+  Serial.println("%");
+ 
+ // bloco condicional que acende ou apaga o led dependendo da porcentagam (precisei inverter a lógica para funcionar com o led interno do ESP)
+  if (pct <= 35) {
+    digitalWrite(led, LOW);
+  } 
+  else {
+    digitalWrite(led, HIGH);
+  }
+
+  delay(2000); // delay de 2 segundos entre cada execução do código
+}
