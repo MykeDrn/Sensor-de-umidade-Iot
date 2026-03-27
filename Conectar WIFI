@@ -1,4 +1,4 @@
-//// Esse documento contém as bibliotecas, variáveis e funções que foram utilizadas na função conectarWIFI, comm um breve conmentário explicando sua função 
+//// Esse documento contém as bibliotecas, variáveis e funções que foram utilizadas na função conectarWIFI, com um breve conmentário explicando sua função 
 
 #include <WiFi.h> // biblioteca responsável pela conexão do microcontrolador com a rede
 #include <WiFiClientSecure.h> // biblioteca responsável pela criptografia e segurança da conexão
@@ -26,6 +26,6 @@ void conectarWiFi() {
         ESP.restart();
     }
     else {
-        Serial.println("\nConectado!"); // printa no  serial monitor caso a conexão seja estabelecida
+        Serial.println("\nConectado!"); // printa no serial monitor caso a conexão seja estabelecida
     }
 }
