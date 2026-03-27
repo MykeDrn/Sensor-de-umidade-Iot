@@ -1,0 +1,22 @@
+//// Esse documento contém as bibliotecas, variáveis e funções que foram utilizadas na função enviarTelegram, com um breve conmentário explicando sua função 
+
+#include <UniversalTelegramBot.h> // biblioteca do telegram
+#include <ArduinoJson.h> // a IDE arduino fez o download dessa biblioteca por ela ser obrigatoria para que a biblioteca do telegram funcione, 
+                        //fiquei com preguiça de pesquisar sobre ela
+
+// Constantes
+
+const char* botToken = " "; // constante  que recebe o token do bot, a criação do bot é  feita através do robô BotFather
+const char* chatId = " "; //constante  que recebe o token do bot, é possível obter o id do chat através do bot IDbot
+
+UniversalTelegramBot bot(botToken, client); // função que configura as credenciais do bot
+
+String mensagem = "🚨 Solo seco (" + String(pct, 1) + "%).\nRegando planta..."; // variavel que armazena a mensagem que o bot enviará caso a umidade esteja baixa
+enviarTelegram(mensagem); // chama a função
+
+void enviarTelegram(String mensagem) { // definição da função, se houver conexão com a internet envia a mensagem
+    if (WiFi.status() == WL_CONNECTED) {
+        bot.sendMessage(chatId, mensagem, ""); // função que envia a mensagem, recebendo como parâmetros a ID do chat, a mensagem e uma flag de markdown 
+                                                                                                                        // (que permite a formatação do texto)
+    }
+}
