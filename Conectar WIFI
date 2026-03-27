@@ -1,0 +1,31 @@
+//// Esse documento contém as bibliotecas, variáveis e funções que foram utilizadas na função conectarWIFI, comm um breve conmentário explicando sua função 
+
+#include <WiFi.h> // biblioteca responsável pela conexão do microcontrolador com a rede
+#include <WiFiClientSecure.h> // biblioteca responsável pela criptografia e segurança da conexão
+
+const char* ssid = " "; // constante que define o ssid da rede, utilizada pela biblioteca wifi.h
+const char* password = " "; // constante que define a senha da rede, utilizada pela biblioteca wifi.h
+
+WiFiClientSecure client; // nomeia o client, utilizada pela biblioteca WiFiClientSecure.h
+
+conectarWiFi(); // chama a função
+
+void conectarWiFi() {
+    client.setInsecure(); // torna a conexão insegura, foi configurado como inseguro para não encher a memória do microcontrolador com certificados
+    WiFi.mode(WIFI_STA); // define o modo do wifi
+    WiFi.begin(ssid, password); // inicia a conexão com a rede, recebe o ssid e a senha
+    
+    int tentativas = 0; // contador do loop
+    while (WiFi.status() != WL_CONNECTED && tentativas < 20) { // loop da conexão, repete as instruções até a conexão ser estabelecida, caso isso não ocorra ele reinicia o microcontrolador 
+        delay(1000); // delay de 1 minuto
+        Serial.print("."); // printa os pontinhhos no terminal para demoonstrar a execução do loop
+        tentativas++; // incrementa o contador
+    }
+    
+    if (WiFi.status() != WL_CONNECTED) { // caso a conexão com a rede não seja estabelecida o esp é reiniciado
+        ESP.restart();
+    }
+    else {
+        Serial.println("\nConectado!"); // printa no  serial monitor caso a conexão seja estabelecida
+    }
+}
