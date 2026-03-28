@@ -43,7 +43,7 @@ void loop() {
 
 // bloco condicional
     if (pct <= 35) {
-        digitalWrite(led, LOW); // ativa o led que representa a bomba d'água 
+        digitalWrite(led, HIGH); // ativa o led que representa a bomba d'água 
         if (!mensagemEnviada){ // só executa se a flag for false
             String mensagem = "🚨 Solo seco (" + String(pct, 1) + "%).\nRegando planta..."; // 
             enviarTelegram(mensagem); // envia a mensagem
@@ -51,7 +51,7 @@ void loop() {
         }
     } 
     else {
-        digitalWrite(led, HIGH);
+        digitalWrite(led,LOW);
         mensagemEnviada = false; // seta a flag para false, permitindo o envio da mensagem se a umidade ficar abaixo do valor definido
     }
 
