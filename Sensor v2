@@ -43,7 +43,9 @@ void loop() {
 
 // bloco condicional
     if (pct <= 35) {
-        digitalWrite(led, HIGH); // ativa o led que representa a bomba d'água 
+        digitalWrite(led, HIGH); // ativa o led que representa a bomba d'água
+        delay(3000); // mantém a bomba ligada por 3 segundos
+        digitalWrite(led, LOW); // desativa a bomba
         if (!mensagemEnviada){ // só executa se a flag for false
             String mensagem = "🚨 Solo seco (" + String(pct, 1) + "%).\nRegando planta..."; // 
             enviarTelegram(mensagem); // envia a mensagem
