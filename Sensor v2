@@ -46,6 +46,7 @@ void loop() {
         digitalWrite(led, HIGH); // ativa o led que representa a bomba d'água
         delay(3000); // mantém a bomba ligada por 3 segundos
         digitalWrite(led, LOW); // desativa a bomba
+        delay(3000); // esse último tem a função de dar um tempo até o esp32 se estabilizar da queda de tensão proveniente do acionamento da bomba
         if (!mensagemEnviada){ // só executa se a flag for false
             String mensagem = "🚨 Solo seco (" + String(pct, 1) + "%).\nRegando planta..."; // 
             enviarTelegram(mensagem); // envia a mensagem
