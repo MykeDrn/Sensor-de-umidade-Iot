@@ -21,7 +21,7 @@ const float umidademax = 1355.0;
 const float umidademin = 3090.0;
 
 WiFiClientSecure client; 
-UniversalTelegramBot bot(botToken, client); // ignora a validação do certificado ssl
+UniversalTelegramBot bot(botToken, client); 
 bool mensagemEnviada = false; // flag que evita o flood de mensagens 
 
 void setup() {
